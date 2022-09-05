@@ -1,7 +1,7 @@
 # Data directories
 data
 Data
-driver
+chromedriver_linux64
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
