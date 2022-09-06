@@ -31,6 +31,10 @@ scrapy crawl quotes -o quotes.json  # export json
 scrapy crawl quotes -o "./data/quotes.csv"
 scrapy crawl quotes -o "./data/quotes.json"
 
+# seems scrapy doesn't overwrite old exported file
+rm "./data/quotes.csv"  # either remove before write
+scrapy crawl quotes -O "./data/quotes.csv"  # or use capital "O"
+
 # _________________________________
 # RUN a stand-alone scrapy script file without a project (e.g. only a quotes.py file, no supporting framework)
 cd "~/Desktop"

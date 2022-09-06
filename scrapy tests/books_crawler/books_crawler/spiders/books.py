@@ -1,5 +1,5 @@
 ## Simple scrapy test 02: class CrawkSpider
-## This is to automatically extract urls to reach new webpages
+## This is to automatically extract urls all available urls accessible from the target website
 
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
@@ -18,5 +18,8 @@ class BooksSpider(CrawlSpider):
     rules = (Rule(LinkExtractor(deny_domains=('google.com','facebook.com'), allow=("music")), \
     callback='parse_page', follow=True),)
 
+    # <response> stores scrapped web content by scrapy
+    # 1st: content of the initial page (could be <fetch("xx/url")> or inherited from CrawlSpider or Spider)
+    # 2nd: content of another page - will overwrite the 1st response (e.g. Request("xx/another/url"))
     def parse_page(self, response):
-        yield {'URL': response.url}
+        yield {'URL': response.url}  # 1st <response> - already inherited the <url> attribute for the current page url
