@@ -55,6 +55,23 @@ quote.xpath('.//*[@class="text"]/text()').extract_first()  # the first text
 quote.xpath('.//*[@class="text"]/text()').extract()[0]  # the first text
 
 # _________________________________
-## complete URL
+## complete URL (also works for all relative urls even like this "../../new_address")
 relative_url = response.xpath('//nav//li[@class="next"]/a/@href').extract_first()
 complete_url = response.urljoin(relative_url)
+
+# _________________________________
+## contents contained in an attribute
+# (e.g. get the full content that contains sub-string "star" in a class attribute)
+fetch("https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html")
+response.xpath('//*[contains(@class, "star")]/@class').extract()
+response.xpath('//*[contains(@class, "star-rating")]/@class').extract_first()
+
+# _________________________________
+## the next tag (not nested) (e.g. a stand-alone <p> is difficult to locate by itself)
+fetch("https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html")
+response.xpath('//*[@id="product_description"]/following-sibling::p/text()').extract_first()
+
+## can also identify using [contains()], [@id='xxx'], and even [text()='xxx'] to help locate
+fetch("https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html")
+response.xpath("//th[text()='UPC']/text()").extract_first()
+response.xpath("//th[text()='UPC']/following-sibling::td/text()").extract_first()
