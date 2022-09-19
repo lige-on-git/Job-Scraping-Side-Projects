@@ -1,5 +1,5 @@
 ## Simple scrapy test 02: class CrawkSpider
-## This is to automatically extract urls all available urls accessible from the target website
+## This is to automatically extract all available urls accessible from the target website
 
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor

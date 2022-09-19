@@ -1,5 +1,5 @@
 ## Simple scrapy test 01: class scrapy.Spider
-## This is to manually extract urls to reach and extract infor from new webpages
+## This is to manually extract urls to reach and extract info from new webpages
 
 import scrapy
 class QuotesSpider(scrapy.Spider):

@@ -65,13 +65,25 @@ complete_url = response.urljoin(relative_url)
 fetch("https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html")
 response.xpath('//*[contains(@class, "star")]/@class').extract()
 response.xpath('//*[contains(@class, "star-rating")]/@class').extract_first()
+# response.xpath('//*[contains(text(), "Received")]')  # can even be used for text()
 
 # _________________________________
 ## the next tag (not nested) (e.g. a stand-alone <p> is difficult to locate by itself)
 fetch("https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html")
-response.xpath('//*[@id="product_description"]/following-sibling::p/text()').extract_first()
+response.xpath('//*[@id="product_description"]/following-sibling::p/text()').extract()  # only return the next p tag
+response.xpath('//*[@id="product_description"]/following::p/text()').extract_first()  # a list of all following p
 
 ## can also identify using [contains()], [@id='xxx'], and even [text()='xxx'] to help locate
 fetch("https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html")
 response.xpath("//th[text()='UPC']/text()").extract_first()
 response.xpath("//th[text()='UPC']/following-sibling::td/text()").extract_first()
+
+# _________________________________
+## tune form (https://docs.scrapy.org/en/latest/topics/request-response.html)
+fetch('https://www.eplanning.ie/CavanCC/SearchListing/RECEIVED')
+response.url
+form = scrapy.FormRequest.from_response(response,
+       formdata={'RdoTimeLimit': '42'},  # override the default form data
+       formxpath='(//*[@class="container body-content"]/form)')  # locate the correct <form> tag can be time consuming
+fetch(form)
+view(response)
