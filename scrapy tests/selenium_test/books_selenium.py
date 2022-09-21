@@ -11,7 +11,7 @@ from time import sleep
 from selenium.common.exceptions import NoSuchElementException
 
 class BooksSpider(scrapy.Spider):
-    name = 'books'
+    name = 'books-selenium'
     allowed_domains = ['books.toscrape.com']
 
     def start_requests(self):
@@ -48,9 +48,13 @@ class BooksSpider(scrapy.Spider):
                 break
 
     # <response> stores scrapped web content by scrapy
-    # 1st: content of the initial page (could be <fetch("xx/url")> or inherited from CrawlSpider or Spider)
-    # 2nd: content of another page - will overwrite the 1st response (e.g. Request("xx/another/url"))
+    # 1st: content of the initial page in the parse() function (could be <fetch("xx/url")> or inherited from CrawlSpider or Spider)
+    # 2nd: content of another page
+    # - either no callback: will overwrite the 1st response in the parse() function (e.g. Request("xx/next/page/url"))
+    # - or has callback: will pass the response to the callback function like parse_book()
     def parse_book(self, response):
+        # This is a <callback> function
+
         # Since we use selenium to access web content here, "self" might play the role of the 1st <response> (hence response.url doesn't work)
         # However, the "self" method might cause some mismatches with the 2nd "response" (e.g. "self.full_url" and "response.xpath('//h1/text()')" don't match)
         # We can still use the 2nd <response> - since we "Request" this callback function in start_requests()

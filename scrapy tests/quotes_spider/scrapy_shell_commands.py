@@ -55,6 +55,52 @@ quote.xpath('.//*[@class="text"]/text()').extract_first()  # the first text
 quote.xpath('.//*[@class="text"]/text()').extract()[0]  # the first text
 
 # _________________________________
-## complete URL
+## complete URL (also works for all relative urls even like this "../../new_address")
 relative_url = response.xpath('//nav//li[@class="next"]/a/@href').extract_first()
 complete_url = response.urljoin(relative_url)
+
+# _________________________________
+## contents contained in an attribute
+# (e.g. get the full content that contains sub-string "star" in a class attribute)
+fetch("https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html")
+response.xpath('//*[contains(@class, "star")]/@class').extract()
+response.xpath('//*[contains(@class, "star-rating")]/@class').extract_first()
+# response.xpath('//*[contains(text(), "Received")]')  # can even be used for text()
+
+# _________________________________
+## the next tag (not nested) (e.g. a stand-alone <p> is difficult to locate by itself)
+fetch("https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html")
+response.xpath('//*[@id="product_description"]/following-sibling::p/text()').extract()  # only return the next p tag
+response.xpath('//*[@id="product_description"]/following::p/text()').extract_first()  # a list of all following p
+
+## can also identify using [contains()], [@id='xxx'], and even [text()='xxx'] to help locate
+fetch("https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html")
+response.xpath("//th[text()='UPC']/text()").extract_first()
+response.xpath("//th[text()='UPC']/following-sibling::td/text()").extract_first()
+
+# _________________________________
+## tune form (https://docs.scrapy.org/en/latest/topics/request-response.html)
+fetch('https://www.eplanning.ie/CarlowCC/SearchListing/RECEIVED')
+response.url
+len(response.xpath('//form'))  # to check how many form tags in this html file
+form = scrapy.FormRequest.from_response(response,
+       formdata={'RdoTimeLimit': '42'},  # override the default form data
+       formxpath='(//*[@class="container body-content"]/form)')  # locate the correct <form> tag can be time consuming
+fetch(form)
+response.url  # get https://www.eplanning.ie/CavanCC/searchresults, which is not unique (can try this url without requesting form)
+view(response)  # view response in a browser
+
+
+# _________________________________
+fetch('https://www.eplanning.ie/CarlowCC/AppFileRefDetails/22261/0')
+## control level of a selector
+
+# two nested tags <tr> and <th>, where text() wrapped in <tr> tag is "Name :"
+# 1. locate <tr> selector using info of its child tag <th>, while selector remains on the level of <tr>
+response.xpath('//tr[th="Name :"]')
+
+# this is important if we need to access sibling tags of the upper tag <tr> (can otherwise be tricky)
+response.xpath('//tr[th="Name :"]/following-sibling::tr/th/text()').extract()
+
+# 2. In contrast, this will only locate selector on the level of <th> (less useful in the previous example)
+response.xpath('//tr/th[text()="Name :"]')
