@@ -13,9 +13,16 @@ from selenium.webdriver.chrome.options import Options
 
 import random
 from time import sleep
+import csv
 
+credential_path = '../../../login-credentials.csv'
 driver_path = '../../chromedriver_linux64/version_105/chromedriver'
 linkedin_home = 'https://www.linkedin.com/'
+
+with open(credential_path, 'r') as file:
+    credentials = list(csv.reader(file))  # convert iterable to list
+    email = credentials[0][1]
+    password = credentials[1][1]
 
 def short_sleep():
     # customize random sleeping time
@@ -53,11 +60,11 @@ def login_module():
         # there is also an outter <form> tag - so can use scrapy form request too (but hard to bypass robot check)
         driver.find_element("name", 'session_key')
         username_input = driver.find_element("id", 'username')
-        username_input.send_keys('liget.general@gmail.com')  # use selenium to send input to fill the form
+        username_input.send_keys(email)  # use selenium to send input to fill the form
         long_sleep()
 
         password_input = driver.find_element("id", 'password')
-        password_input.send_keys('temppasswordforscrapy')
+        password_input.send_keys(password)  # never ever put actual password in code and upload to github....
         short_sleep()
 
         driver.find_element("xpath",'//button[contains(text(), "Sign in")]').click()
