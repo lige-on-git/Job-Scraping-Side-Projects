@@ -42,4 +42,33 @@ CREATE TABLE roles_students (
     FOREIGN KEY(role_id) REFERENCES roles(id)
 );
 
+-- add skills and tools
+
+CREATE TABLE skills (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    skill_name VARCHAR(100)
+);
+
+CREATE TABLE tools (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tool_name VARCHAR(100)
+);
+
+CREATE TABLE tools_students (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id VARCHAR(20),
+    tool_id INT,
+    FOREIGN KEY(student_id) REFERENCES students(id),
+    FOREIGN KEY(tool_id) REFERENCES tools(id)
+);
+
+CREATE TABLE skills_students (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id VARCHAR(20),
+    skill_id INT,
+    FOREIGN KEY(student_id) REFERENCES students(id),
+    FOREIGN KEY(skill_id) REFERENCES skills(id)
+);
+
+
 SHOW TABLES;
