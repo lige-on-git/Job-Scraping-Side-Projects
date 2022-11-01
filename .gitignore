@@ -1,6 +1,11 @@
+# R history
+.Rhistory
+
 # Data directories
 data
+database
 Data
+Database
 chromedriver_linux64
 
 # Byte-compiled / optimized / DLL files
